@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from .serializers import HouseSerializer,UserSerializer
 from .models import House,User
-from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status

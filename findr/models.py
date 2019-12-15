@@ -17,10 +17,10 @@ class User(models.Model):
 
 class House(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    description = models.CharField('description',max_length=30)
+    description = models.TextField()
     house_name = models.CharField('house_name',max_length=60)
     house_pic = models.ImageField(upload_to='images/')
-    title = models.CharField('title',max_length=100)
+    title = models.CharField(max_length=300)
     price = models.CharField('price',max_length=60)
     total_rooms = models.CharField('total_rooms', max_length=100),
     choices = (

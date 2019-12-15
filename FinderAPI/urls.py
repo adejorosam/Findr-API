@@ -23,10 +23,14 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #url('',)
     url(r'^house/',views.HouseList.as_view(), name='House'),
     url(r'^user/', views.CustomUserList.as_view(), name='User')
 ]
 
+urlpatterns += [
+    url(r'^api-auth/', include('rest_framework.urls'))
+]
 
 
 
