@@ -1,12 +1,17 @@
 from rest_framework import serializers
-from .models import User,House
-
+from .models import User,Apartment
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
 
-class HouseSerializer(serializers.ModelSerializer):
+class ApartmentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = House
+        model = Apartment
         fields = '__all__'
+'''
+class ApartmentCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApartmentCategory
+        fields = '__all__'
+'''

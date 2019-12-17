@@ -28,6 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +42,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'findr',
 ]
+
+REST_FRAMEWORK = {
+    
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 20,
+   
+}
 
 #AUTH_USER_MODEL = 'users.CustomUser',
 

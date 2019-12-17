@@ -20,12 +20,21 @@ from django.conf.urls import url
 from findr import views
 from django.conf import settings
 from django.conf.urls.static import static
+'''
+router = routers.DefaultRouter()
+router.register(r'api/house', views.HouseView)
+router.register(r'api/block', views.BlockView)
+router.register(r'api/room', views.RoomView)
+router.register(r'api/warden', views.WardenView)
+
+'''
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #url('',)
-    url(r'^house/',views.HouseList.as_view(), name='House'),
-    url(r'^user/', views.CustomUserList.as_view(), name='User')
+    url(r'^apartment/',views.ApartmentList.as_view(), name='Apartment'),
+    url(r'^user/', views.UserList.as_view(), name='User'),
+    #url(r'^category/',views.ApartmentCategoryList.as_view(), name='ApartmentCategory'),
 ]
 
 urlpatterns += [
