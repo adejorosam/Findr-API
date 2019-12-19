@@ -19,6 +19,7 @@ def api_root(request, format=None):
     return Response({
         'users': reverse('UserList', request=request, format=format),
         'apartments': reverse('ApartmentList', request=request, format=format)
+
     })
 
 class ApartmentList(APIView):
