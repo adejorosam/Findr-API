@@ -29,7 +29,7 @@ class ApartmentList(APIView):
         apartments = Apartment.objects.all()
         paginator = LimitOffsetPagination()
         result_page = paginator.paginate_queryset(apartments,request)
-        serializer = ApartmentSerializer(result_page,many=True, context={'request':request})
+        serializer = ApartmentSerializer(result_page,many=True, context={'request':request})   
         return Response(serializer.data)
 
     def post(self, request, format=None):

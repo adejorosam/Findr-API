@@ -10,11 +10,11 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
     path('', views.api_root),
-    path('apartments/',views.ApartmentList.as_view()),
-    path('apartments/<int:pk>/', views.ApartmentDetails.as_view()),
-    path('users/', views.UserList.as_view()),
-    path('users/<int:pk>/', views.UserDetails.as_view()),
-    path('api-token-auth/', rviews.obtain_auth_token),
+    path('apartments/',views.ApartmentList.as_view(), name= 'ApartmentList'),
+    path('apartments/<int:pk>/', views.ApartmentDetails.as_view(), name='ApartmentDetail'),
+    path('users/', views.UserList.as_view(), name='UserList'),
+    path('users/<int:pk>/', views.UserDetails.as_view(), name='User'),
+    path('api-token-auth/', rviews.obtain_auth_token, name='RViews'),
     #url(r'^category/',views.ApartmentCategoryList.as_view(), name='ApartmentCategory'),
 ]
 
