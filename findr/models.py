@@ -22,6 +22,8 @@ class User(models.Model):
     is_admin = models.BooleanField('staff_status',max_length=6)
     date_joined = models.DateTimeField(default=timezone.now)
 
+    objects = models.Manager()
+
     def __str__(self):
         return self.username
 
@@ -47,6 +49,8 @@ class Apartment(models.Model):
     isNewHouse = models.CharField('new',max_length=80,choices=choices)
     isNegotiable = models.CharField('new', max_length=80,choices=choices)
     date_posted = models.DateTimeField(default=timezone.now)
+
+    objects = models.Manager()
     
     def __str__(self):
         return self.house_name

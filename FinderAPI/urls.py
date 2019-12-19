@@ -15,33 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from rest_framework.urlpatterns import format_suffix_patterns
-from django.conf.urls import url
-from findr import views
+#from rest_framework.urlpatterns import format_suffix_patterns
+#from django.conf.urls import url
+#from findr import views
 from django.conf import settings
 from django.conf.urls.static import static
-'''
-router = routers.DefaultRouter()
-router.register(r'api/house', views.HouseView)
-router.register(r'api/block', views.BlockView)
-router.register(r'api/room', views.RoomView)
-router.register(r'api/warden', views.WardenView)
+#from rest_framework.authtoken.views import obtain_auth_token
+#from rest_framework.authtoken import views as rviews
 
-'''
 
 
 urlpatterns = [
+    path('api/', include('findr.urls')),
     path('admin/', admin.site.urls),
-    url(r'^apartment/',views.ApartmentList.as_view(), name='Apartment'),
-    url(r'^user/', views.UserList.as_view(), name='User'),
-    #url(r'^category/',views.ApartmentCategoryList.as_view(), name='ApartmentCategory'),
+  
 ]
-
-urlpatterns += [
-    url(r'^api-auth/', include('rest_framework.urls'))
-]
-
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
