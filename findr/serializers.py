@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
             required=True,
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
-    phone_number = serializers.CharField(
+    phone_number = serializers.CharField(required=True,
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
 
