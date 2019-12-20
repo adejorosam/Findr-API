@@ -24,6 +24,8 @@ def api_root(request, format=None):
     })
 '''
 class API_Root(APIView):
+    authentication_classes = [BasicAuthentication,SessionAuthentication,TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self,request, format=None):
         return Response({
             'users':reverse('UserList',request=request, format=format),
