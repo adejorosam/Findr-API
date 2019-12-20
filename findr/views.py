@@ -10,10 +10,43 @@ from rest_framework.authentication import BasicAuthentication,SessionAuthenticat
 from django.http import Http404
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
+from rest_framework.settings import api_settings
 
 
 
 # Create your views here.
+class MyPaginationMixin(object):
+
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination 
+        is disabled.
+        """
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(
+            queryset, self.request, view=self)
+
+    def get_paginated_response(self, data):
+        """
+        Return a paginated style `Response` object for the given 
+        output data.
+        """
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
+
 '''
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -23,6 +56,8 @@ def api_root(request, format=None):
 
     })
 '''
+
+
 class API_Root(APIView):
     authentication_classes = [BasicAuthentication,SessionAuthentication,TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -32,16 +67,19 @@ class API_Root(APIView):
             'apartments':reverse('ApartmentList', request=request, format=format)
         })
 
-class ApartmentList(APIView):
+class ApartmentList(APIView,MyPaginationMixin):
     authentication_classes = [BasicAuthentication,SessionAuthentication,TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
+    apartments = Apartment.objects.all()
+    serializer = ApartmentSerializer
 
     def get(self,request):
-        apartments = Apartment.objects.all()
-        paginator = LimitOffsetPagination()
-        result_page = paginator.paginate_queryset(apartments,request)
-        serializer = ApartmentSerializer(result_page,many=True, context={'request':request})   
-        return Response(serializer.data)
+        
+        page = self.paginate_queryset(self.apartments)
+        if page is not None:
+            serializer = self.serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
     def post(self, request, format=None):
         serializer = ApartmentSerializer(data=request.data)
@@ -132,7 +170,6 @@ class UserDetails(APIView):
         snippet = self.get_object(pk)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 
 

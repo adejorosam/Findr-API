@@ -2,6 +2,8 @@ from django.db import models
 #from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
 from django.utils import timezone
 
+
+
 # Create your models here.
 
 # def user_directory_path(instance, filename):
@@ -21,11 +23,12 @@ class User(models.Model):
     phone_number = models.CharField('phone_number',max_length=20,unique=True)
     is_admin = models.BooleanField('staff_status',max_length=6)
     date_joined = models.DateTimeField(default=timezone.now)
+    #key = models.CharField(max_length=100, unique=True, blank=True)
 
     objects = models.Manager()
 
     def __str__(self):
-        return self.username
+        return self.phone_number
 
 class Apartment(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)

@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'phone_verify',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_framework.authtoken',
     'findr',
+    
 ]
 
 REST_FRAMEWORK = {
@@ -56,7 +58,22 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
    
 }
-
+'''
+PHONE_VERIFICATION = {
+    'BACKEND': 'phone_verify.backends.twilio.TwilioBackend',
+    'OPTIONS': {
+        'SID': 'AC07844d988c474ceeaec5ac6c9a829f8e',
+        'SECRET': 'samson',
+        'FROM': '+12016361235',
+        'SANDBOX_TOKEN':'a7cd4a4c4c6be7b878685a0f2bae5dc8',
+    },
+    'TOKEN_LENGTH': 6,
+    'MESSAGE': 'Welcome to {app}! Please use security code {security_code} to proceed.',
+    'APP_NAME': 'Phone Verify',
+    'SECURITY_CODE_EXPIRATION_TIME': 3600,  # In seconds only
+    'VERIFY_SECURITY_CODE_ONLY_ONCE': True,  # If False, then a security code can be used multiple times for verification
+}
+'''
 #AUTH_USER_MODEL = 'users.CustomUser',
 
 MIDDLEWARE = [

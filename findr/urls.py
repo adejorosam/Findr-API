@@ -9,6 +9,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 
 urlpatterns = [
+    #path('api/<str:phone>/register', views.VerifyPhone.as_view()),
+    #path('api/<str:phone>/verify', views.VerifyPhone.as_view() ),
     path('', views.API_Root.as_view()),
     path('apartments/',views.ApartmentList.as_view(), name= 'ApartmentList'),
     path('apartments/<int:pk>/', views.ApartmentDetails.as_view(), name='ApartmentDetail'),
