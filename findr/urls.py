@@ -9,7 +9,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 
 urlpatterns = [
-    path('', views.api_root),
+    path('', views.API_Root.as_view()),
     path('apartments/',views.ApartmentList.as_view(), name= 'ApartmentList'),
     path('apartments/<int:pk>/', views.ApartmentDetails.as_view(), name='ApartmentDetail'),
     path('users/', views.UserList.as_view(), name='UserList'),

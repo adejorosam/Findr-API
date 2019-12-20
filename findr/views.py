@@ -14,6 +14,7 @@ from rest_framework.decorators import api_view
 
 
 # Create your views here.
+'''
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({
@@ -21,6 +22,13 @@ def api_root(request, format=None):
         'apartments': reverse('ApartmentList', request=request, format=format)
 
     })
+'''
+class API_Root(APIView):
+    def get(self,request, format=None):
+        return Response({
+            'users':reverse('UserList',request=request, format=format),
+            'apartments':reverse('ApartmentList', request=request, format=format)
+        })
 
 class ApartmentList(APIView):
     authentication_classes = [BasicAuthentication,SessionAuthentication,TokenAuthentication]

@@ -17,7 +17,7 @@ class ApartmentCategory(models.Model):
 '''
 
 class User(models.Model):
-    username = models.CharField('username',max_length=30)
+    #username = models.CharField('username',max_length=30)
     phone_number = models.CharField('phone_number',max_length=20,unique=True)
     is_admin = models.BooleanField('staff_status',max_length=6)
     date_joined = models.DateTimeField(default=timezone.now)
