@@ -19,21 +19,23 @@ class ApartmentCategory(models.Model):
 '''
 
 class User(models.Model):
-    #username = models.CharField('username',max_length=30)
-    phone_number = models.CharField('phone_number',max_length=20,unique=True)
+    username = models.CharField('username',max_length=60)
+    phone_number = models.CharField('phone_number',max_length=9,unique=True)
     is_admin = models.BooleanField('staff_status',max_length=6)
     date_joined = models.DateTimeField(default=timezone.now)
     #key = models.CharField(max_length=100, unique=True, blank=True)
 
+    
+
     objects = models.Manager()
 
     def __str__(self):
-        return self.phone_number
+        return self.username
 
 class Apartment(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     description = models.TextField()
-    house_address = models.CharField('house_address',max_length=10000, null=True)
+    house_address = models.CharField('house_address',max_length=10000)
     #apartment_categories = models.ForeignKey('ApartmentCategory',on_delete=models.CASCADE)
     house_name = models.CharField('house_name',max_length=60)
     house_pic = models.ImageField(upload_to='images/')

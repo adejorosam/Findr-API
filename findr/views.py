@@ -6,11 +6,16 @@ from rest_framework import status
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated 
 from rest_framework.authtoken.models import Token
-from rest_framework.authentication import BasicAuthentication,SessionAuthentication,TokenAuthentication
-from django.http import Http404
+from rest_framework.authentication import TokenAuthentication
+from django.http import Http404,JsonResponse
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
 from rest_framework.settings import api_settings
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth import authenticate,login,logout
+import json
+
 
 
 
@@ -59,8 +64,8 @@ def api_root(request, format=None):
 
 
 class API_Root(APIView):
-    authentication_classes = [BasicAuthentication,SessionAuthentication,TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
     def get(self,request, format=None):
         return Response({
             'users':reverse('UserList',request=request, format=format),
@@ -68,14 +73,13 @@ class API_Root(APIView):
         })
 
 class ApartmentList(APIView,MyPaginationMixin):
-    authentication_classes = [BasicAuthentication,SessionAuthentication,TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
     apartments = Apartment.objects.all()
     serializer = ApartmentSerializer
 
     def get(self,request):
-        
         page = self.paginate_queryset(self.apartments)
         if page is not None:
             serializer = self.serializer(page, many=True)
@@ -93,8 +97,8 @@ class ApartmentDetails(APIView):
     Retrieve, update or delete an apartment instance.
     """
   
-    authentication_classes = [BasicAuthentication,SessionAuthentication,TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
     def get_object(self, pk):
         try:
             return Apartment.objects.get(pk=pk)
@@ -121,8 +125,8 @@ class ApartmentDetails(APIView):
 
 
 class UserList(APIView):
-    authentication_classes = [BasicAuthentication,SessionAuthentication,TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
     def get(self,request):
         users = User.objects.all()
         serializer = UserSerializer(users,many=True)
@@ -144,8 +148,8 @@ class UserDetails(APIView):
     """
     Retrieve, update or delete a user instance.
     """
-    authentication_classes = [BasicAuthentication,SessionAuthentication,TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, pk):
         try:
@@ -171,5 +175,29 @@ class UserDetails(APIView):
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class Login(APIView):
+    def post(self,request):
+        data = str(request.POST['json'])
+        dd = json.loads(data)
+        phone_number = dd['phone_number']
+        #password = dd['password']
 
+        user = authenticate(phone_number=phone_number)
+        if user is not None:
+
+            token = Token.objects.get_or_create(user=user)
+            print(token[0])
+            login(request, user)
+            data = {
+            'message': 'valid',
+            'token': str(token[0])
+
+            }
+        else:
+            data = {
+            'message': 'invalid'
+            }
+
+        return JsonResponse(data)
+    
 
