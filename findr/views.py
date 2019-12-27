@@ -130,7 +130,7 @@ class UserList(APIView):
         if serializer.is_valid():
             users = serializer.save()
             if users:
-                #Token.objects.filter(user=users).delete()
+                Token.objects.filter(user=users).delete()
                 token = Token.objects.create(user=users)
                 json = serializer.data
                 json['token'] = token.key
