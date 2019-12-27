@@ -22,7 +22,7 @@ urlpatterns = [
     path('apartments/<int:pk>/', views.ApartmentDetails.as_view(), name='ApartmentDetail'),
     path('users/', views.UserList.as_view(), name='UserList'),
     path('users/<int:pk>/', views.UserDetails.as_view(), name='User'),
-    path('login', views.LoginView.as_view(), name='login'),
+    path('login/', views.logins, name='Login'),
     path('api-token-auth/', rviews.obtain_auth_token, name='RViews'),
     #url(r'^category/',views.ApartmentCategoryList.as_view(), name='ApartmentCategory'),
     

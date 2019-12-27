@@ -1,4 +1,4 @@
-from .serializers import ApartmentSerializer, UserSerializer
+from .serializers import ApartmentSerializer, UserSerializer, UserLoginSerializer
 from .models import Apartment, User
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,18 +6,22 @@ from rest_framework import status
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated 
 from rest_framework.authtoken.models import Token
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from django.http import Http404,JsonResponse
 from rest_framework.reverse import reverse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.settings import api_settings
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import authenticate,login,logout
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import AllowAny
+from rest_framework.status import (
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_200_OK
+)
 import json
-
-
-
 
 # Create your views here.
 class MyPaginationMixin(object):
@@ -52,28 +56,19 @@ class MyPaginationMixin(object):
         assert self.paginator is not None
         return self.paginator.get_paginated_response(data)
 
-'''
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('UserList', request=request, format=format),
-        'apartments': reverse('ApartmentList', request=request, format=format)
-
-    })
-'''
-
 
 class API_Root(APIView):
-    #authentication_classes = [TokenAuthentication]
+    #authentication_classes = [TokenAuthentication, BasicAuthentication]
     permission_classes = (IsAuthenticated,)
     def get(self,request, format=None):
         return Response({
             'users':reverse('UserList',request=request, format=format),
-            'apartments':reverse('ApartmentList', request=request, format=format)
+            'apartments':reverse('ApartmentList', request=request, format=format),
+            'login':reverse('Login', request=request, format=format)
         })
 
 class ApartmentList(APIView,MyPaginationMixin):
-    #authentication_classes = [TokenAuthentication]
+    authentication_classes = [TokenAuthentication, BasicAuthentication]
     permission_classes = (IsAuthenticated,)
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
     apartments = Apartment.objects.all()
@@ -97,7 +92,7 @@ class ApartmentDetails(APIView):
     Retrieve, update or delete an apartment instance.
     """
   
-    #authentication_classes = [TokenAuthentication]
+    authentication_classes = [TokenAuthentication, BasicAuthentication]
     permission_classes = (IsAuthenticated,)
     def get_object(self, pk):
         try:
@@ -125,8 +120,6 @@ class ApartmentDetails(APIView):
 
 
 class UserList(APIView):
-    #authentication_classes = [TokenAuthentication]
-    permission_classes = (IsAuthenticated,)
     def get(self,request):
         users = User.objects.all()
         serializer = UserSerializer(users,many=True)
@@ -137,11 +130,31 @@ class UserList(APIView):
         if serializer.is_valid():
             users = serializer.save()
             if users:
-                token = Token.objects.create(users=users)
+                #Token.objects.filter(user=users).delete()
+                token = Token.objects.create(user=users)
                 json = serializer.data
                 json['token'] = token.key
-                return Response(serializer.data, status= status.HTTP_201_CREATED)
+                return Response(json, status= status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def logins(request):
+    phone_number = request.data.get("phone_number")
+    if phone_number is None:
+        return Response({'error': 'Please provide your phone number'},
+                        status=HTTP_400_BAD_REQUEST)
+    user = authenticate(phone_number=phone_number)
+    if not user:
+        return Response({'error': 'Invalid Credentials'},
+                        status=HTTP_404_NOT_FOUND)
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({'token': token.key},
+                    status=HTTP_200_OK)
+        
+
+        
 
 
 class UserDetails(APIView):
@@ -175,29 +188,5 @@ class UserDetails(APIView):
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class Login(APIView):
-    def post(self,request):
-        data = str(request.POST['json'])
-        dd = json.loads(data)
-        phone_number = dd['phone_number']
-        #password = dd['password']
 
-        user = authenticate(phone_number=phone_number)
-        if user is not None:
-
-            token = Token.objects.get_or_create(user=user)
-            print(token[0])
-            login(request, user)
-            data = {
-            'message': 'valid',
-            'token': str(token[0])
-
-            }
-        else:
-            data = {
-            'message': 'invalid'
-            }
-
-        return JsonResponse(data)
-    
 
