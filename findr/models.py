@@ -1,5 +1,5 @@
 from django.db import models
-#from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
 from django.utils import timezone
 #from django.contrib.auth.models import User
 
@@ -8,16 +8,14 @@ from django.utils import timezone
 # Create your models here.
 
 
-class User(models.Model):
+class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField('username',max_length=60)
     phone_number = models.CharField('phone_number',max_length=11,unique=True)
     is_admin = models.BooleanField('staff_status',max_length=6, default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    #key = models.CharField(max_length=100, unique=True, blank=True)
-
-  
-
+    #key = models.CharField(max_length=100, unique=True, blank=True
     objects = models.Manager()
+    USERNAME_FIELD = 'phone_number'
    
 
     def __str__(self):

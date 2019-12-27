@@ -30,7 +30,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-
+AUTH_USER_MODEL = 'findr.User'
 
 # Application definition
 
@@ -108,7 +108,6 @@ PHONE_VERIFICATION = {
     'VERIFY_SECURITY_CODE_ONLY_ONCE': True,  # If False, then a security code can be used multiple times for verification
 }
 '''
-#AUTH_USER_MODEL = 'users.CustomUser',
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -154,6 +153,7 @@ DATABASES = {
         'HOST':'localhost',
     }
 }
+
 
 
 # Password validation
