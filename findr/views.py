@@ -11,8 +11,6 @@ from django.http import Http404,JsonResponse
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.settings import api_settings
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import authenticate,login,logout
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
@@ -58,7 +56,7 @@ class MyPaginationMixin(object):
 
 
 class API_Root(APIView):
-    #authentication_classes = [TokenAuthentication, BasicAuthentication]
+    authentication_classes = [TokenAuthentication, BasicAuthentication]
     permission_classes = (IsAuthenticated,)
     def get(self,request, format=None):
         return Response({
@@ -120,6 +118,11 @@ class ApartmentDetails(APIView):
 
 
 class UserList(APIView):
+
+    '''
+    Returns all the users of 
+
+    '''
     def get(self,request):
         users = User.objects.all()
         serializer = UserSerializer(users,many=True)
@@ -130,7 +133,6 @@ class UserList(APIView):
         if serializer.is_valid():
             users = serializer.save()
             if users:
-                Token.objects.filter(user=users).delete()
                 token = Token.objects.create(user=users)
                 json = serializer.data
                 json['token'] = token.key
@@ -140,7 +142,7 @@ class UserList(APIView):
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
-def logins(request):
+def login(request):
     phone_number = request.data.get("phone_number")
     if phone_number is None:
         return Response({'error': 'Please provide your phone number'},
@@ -152,9 +154,8 @@ def logins(request):
     token, _ = Token.objects.get_or_create(user=user)
     return Response({'token': token.key},
                     status=HTTP_200_OK)
-        
 
-        
+
 
 
 class UserDetails(APIView):
@@ -187,6 +188,3 @@ class UserDetails(APIView):
         snippet = self.get_object(pk)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-

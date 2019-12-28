@@ -1,21 +1,20 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin, UserManager
 from django.utils import timezone
-#from django.contrib.auth.models import User
-
 
 
 # Create your models here.
 
-
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField('username',max_length=60)
+    username = models.CharField('username',max_length=60, unique=True)
     phone_number = models.CharField('phone_number',max_length=11,unique=True)
-    is_admin = models.BooleanField('staff_status',max_length=6, default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    #key = models.CharField(max_length=100, unique=True, blank=True
-    objects = models.Manager()
-    USERNAME_FIELD = 'phone_number'
+    is_staff = models.BooleanField('staff status', default=False,
+                                   help_text='Designates whether the user can log into this admin '
+                                               'site.')
+    
+    objects = UserManager()
+    USERNAME_FIELD = 'username'
    
 
     def __str__(self):
@@ -25,7 +24,6 @@ class Apartment(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     description = models.TextField()
     house_address = models.CharField('house_address',max_length=10000)
-    #apartment_categories = models.ForeignKey('ApartmentCategory',on_delete=models.CASCADE)
     house_name = models.CharField('house_name',max_length=60)
     house_pic = models.ImageField(upload_to='images/')
     title = models.CharField(max_length=300)

@@ -65,49 +65,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
    
 }
-'''
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
 
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': settings.SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
-
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-
-    'JTI_CLAIM': 'jti',
-
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-}
-'''
-'''
-PHONE_VERIFICATION = {
-    'BACKEND': 'phone_verify.backends.twilio.TwilioBackend',
-    'OPTIONS': {
-        'SID': 'AC07844d988c474ceeaec5ac6c9a829f8e',
-        'SECRET': 'samson',
-        'FROM': '+12016361235',
-        'SANDBOX_TOKEN':'a7cd4a4c4c6be7b878685a0f2bae5dc8',
-    },
-    'TOKEN_LENGTH': 6,
-    'MESSAGE': 'Welcome to {app}! Please use security code {security_code} to proceed.',
-    'APP_NAME': 'Phone Verify',
-    'SECURITY_CODE_EXPIRATION_TIME': 3600,  # In seconds only
-    'VERIFY_SECURITY_CODE_ONLY_ONCE': True,  # If False, then a security code can be used multiple times for verification
-}
-'''
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
