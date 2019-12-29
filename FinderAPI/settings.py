@@ -14,8 +14,11 @@ import os
 from datetime import timedelta
 from django.conf import settings
 
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -31,6 +34,10 @@ ALLOWED_HOSTS = []
 
 
 AUTH_USER_MODEL = 'findr.User'
+
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
+'findr.backends.LoginBackend'
+]
 
 # Application definition
 
