@@ -9,6 +9,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField('username',max_length=60, unique=True)
     phone_number = models.CharField('phone_number',max_length=11,unique=True)
     date_joined = models.DateTimeField(default=timezone.now)
+    last_login = models.DateTimeField()
     is_staff = models.BooleanField('staff status', default=False,
                                    help_text='Designates whether the user can log into this admin '
                                                'site.')

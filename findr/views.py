@@ -89,6 +89,7 @@ class ApartmentList(APIView,MyPaginationMixin):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ApartmentDetails(APIView):
     """
     Retrieve, update or delete an apartment instance.

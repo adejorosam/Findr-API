@@ -24,9 +24,3 @@ class ApartmentSerializer(serializers.ModelSerializer):
         model = Apartment
         fields = '__all__'
 
-class UserLoginSerializer(serializers.Serializer):
-    phone_number = serializers.CharField(required=True, write_only=True)
-
-    class Meta:
-        model = User
-        fields = '__all__'
