@@ -1,67 +1,37 @@
-from .serializers import ApartmentSerializer, UserSerializer, UserLoginSerializer
+from .serializers import ApartmentSerializer, UserSerializer
 from .models import Apartment, User
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import IsAuthenticated 
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.authtoken.models import Token
-from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.authentication import TokenAuthentication
 from django.http import Http404,JsonResponse
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.settings import api_settings
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
+from .mixins import MyPaginationMixin
+import json
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
     HTTP_200_OK
 )
 
-import json
 
 
 # Create your views here.
 
 
-class MyPaginationMixin(object):
-
-    @property
-    def paginator(self):
-        """
-        The paginator instance associated with the view, or `None`.
-        """
-        if not hasattr(self, '_paginator'):
-            if self.pagination_class is None:
-                self._paginator = None
-            else:
-                self._paginator = self.pagination_class()
-        return self._paginator
-
-    def paginate_queryset(self, queryset):
-        """
-        Return a single page of results, or `None` if pagination 
-        is disabled.
-        """
-        if self.paginator is None:
-            return None
-        return self.paginator.paginate_queryset(
-            queryset, self.request, view=self)
-
-    def get_paginated_response(self, data):
-        """
-        Return a paginated style `Response` object for the given 
-        output data.
-        """
-        assert self.paginator is not None
-        return self.paginator.get_paginated_response(data)
-
-
 class API_Root(APIView):
-    authentication_classes = [TokenAuthentication, BasicAuthentication]
-    permission_classes = (IsAuthenticated,)
+
+    ''' List of all endpoints'''
+    permission_classes = [IsAuthenticated]
     def get(self,request, format=None):
         return Response({
             'users':reverse('UserList',request=request, format=format),
@@ -70,18 +40,27 @@ class API_Root(APIView):
         })
 
 class ApartmentList(APIView,MyPaginationMixin):
-    authentication_classes = [TokenAuthentication, BasicAuthentication]
-    permission_classes = (IsAuthenticated,)
-    pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
-    apartments = Apartment.objects.all()
-    serializer = ApartmentSerializer
-
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [AllowAny]
+    serializer_class = ApartmentSerializer
+    pagination_class = LimitOffsetPagination
+    queryset = Apartment.objects.all()
+    
+   
+    # def get(self,request):
+    #     print(self.queryset)
+    #     page = self.paginate_queryset(self.queryset)
+    #     if page is not None:
+    #         serializer = self.serializer_class(page, many=True)
+    #         return self.get_paginated_response(serializer.data)
+        
+    
     def get(self,request):
-        page = self.paginate_queryset(self.apartments)
-        if page is not None:
-            serializer = self.serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
+        apartments = Apartment.objects.all()
+        serializer = ApartmentSerializer(apartments, many=True)
+        return Response(serializer.data)
+        
+        
     def post(self, request, format=None):
         serializer = ApartmentSerializer(data=request.data)
         if serializer.is_valid():
@@ -90,48 +69,38 @@ class ApartmentList(APIView,MyPaginationMixin):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApartmentDetails(APIView):
-    """
-    Retrieve, update or delete an apartment instance.
-    """
-  
-    authentication_classes = [TokenAuthentication, BasicAuthentication]
-    permission_classes = (IsAuthenticated,)
-    def get_object(self, pk):
-        try:
-            return Apartment.objects.get(pk=pk)
-        except Apartment.DoesNotExist:
-            raise Http404
 
-    def get(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = ApartmentSerializer(snippet)
+'''
+class ApartmentList(GenericAPIView):
+    pagination_class = LimitOffsetPagination
+    apartments = Apartment.objects.all()
+
+    def get(self, request):
+        page = self.paginate_queryset(self.apartments)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = ApartmentSerializer(self.apartments, many=True)
         return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = ApartmentSerializer(snippet, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        snippet.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class UserList(APIView):
+'''
+class UserList(APIView, MyPaginationMixin):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    pagination_class = api_settings.DEFAULT_PAGINATION_CLASS  
+    permission_classes = [AllowAny]
 
     '''
-    Returns all the users of 
+    Retrieves all instance user's instances
 
     '''
-    def get(self,request):
-        users = User.objects.all()
-        serializer = UserSerializer(users,many=True)
-        return Response(serializer.data)
+
+    # def get(self,request):
+    #     users = User.objects.all()
+    #     serializer = UserSerializer(users,many=True)
+    #     return Response(serializer.data)
+
+    
 
     def post(self,request):
         serializer = UserSerializer(data=request.data)
@@ -161,14 +130,11 @@ def login(request):
                     status=HTTP_200_OK)
 
 
-
-
 class UserDetails(APIView):
     """
     Retrieve, update or delete a user instance.
     """
-    #authentication_classes = [TokenAuthentication]
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [AllowAny]
 
     def get_object(self, pk):
         try:
@@ -184,6 +150,36 @@ class UserDetails(APIView):
     def put(self, request, pk, format=None):
         snippet = self.get_object(pk)
         serializer = UserSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        snippet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ApartmentDetails(APIView):
+    """
+    Retrieve, update or delete an apartment instance.
+    """
+    permission_classes = [AllowAny]
+    def get_object(self, pk):
+        try:
+            return Apartment.objects.get(pk=pk)
+        except Apartment.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = ApartmentSerializer(snippet)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = ApartmentSerializer(snippet, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

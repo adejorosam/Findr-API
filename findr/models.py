@@ -9,7 +9,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField('username',max_length=60, unique=True)
     phone_number = models.CharField('phone_number',max_length=11,unique=True)
     date_joined = models.DateTimeField(default=timezone.now)
-    last_login = models.DateTimeField()
+    #last_login = LastSeen.objects.when(user=user)
     is_staff = models.BooleanField('staff status', default=False,
                                    help_text='Designates whether the user can log into this admin '
                                                'site.')
@@ -40,7 +40,7 @@ class Apartment(models.Model):
     isFenced = models.CharField('fenced', max_length=100, choices=choices)
     isHaveWater = models.CharField('water', max_length=100,choices=choices)
     isNewHouse = models.CharField('new',max_length=80,choices=choices)
-    isNegotiable = models.CharField('bargained', max_length=80,choices=choices)
+    isNegotiable = models.CharField('Negotiable', max_length=80,choices=choices)
     date_posted = models.DateTimeField(default=timezone.now)
 
     objects = models.Manager()

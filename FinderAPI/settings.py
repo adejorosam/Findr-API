@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_framework.authtoken',
     'findr',
+    'rest_framework_swagger'
     
 ]
 
@@ -60,6 +61,7 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASS':[
         'rest_framework.permissions.IsAuthenticated',
+        
     ],
     'DEFAULT_AUTHENTICATION_CLASS':[
         #'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -69,7 +71,7 @@ REST_FRAMEWORK = {
     ],
     
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 20,
+    'PAGE_SIZE': 2,
    
 }
 
@@ -160,3 +162,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'media') 
 MEDIA_URL = '/media/'
+
+
+REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }
