@@ -6,17 +6,17 @@ from django.conf.urls.static import static
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.authtoken import views as rviews
 from rest_framework.urlpatterns import format_suffix_patterns
-from rest_framework_swagger.views import get_swagger_view
+# from rest_framework_swagger.views import get_swagger_view
 
 
-schema_view = get_swagger_view(title='Findr API')
+# schema_view = get_swagger_view(title='Findr API')
 
 
    
 
 urlpatterns = [
-    url('', schema_view),
-    #path('', views.API_Root.as_view(), name='API Root'),
+    
+    path('', views.API_Root.as_view(), name='API Root'),
     path('apartments/',views.ApartmentList.as_view(), name= 'ApartmentList'),
     path('apartments/<int:pk>/', views.ApartmentDetails.as_view(), name='ApartmentDetail'),
     path('users/', views.UserList.as_view(), name='UserList'),

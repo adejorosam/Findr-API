@@ -42,7 +42,6 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
 # Application definition
 
 INSTALLED_APPS = [
-    'phone_verify',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -63,6 +62,12 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
         
     ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
+        
+    ],
     'DEFAULT_AUTHENTICATION_CLASS':[
         #'rest_framework_simplejwt.authentication.JWTAuthentication',
         #'rest_framework.authentication.BasicAuthentication',
@@ -71,7 +76,7 @@ REST_FRAMEWORK = {
     ],
     
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 2,
+    'PAGE_SIZE': 20,
    
 }
 

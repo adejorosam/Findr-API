@@ -31,7 +31,7 @@ from rest_framework.status import (
 class API_Root(APIView):
 
     ''' List of all endpoints'''
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     def get(self,request, format=None):
         return Response({
             'users':reverse('UserList',request=request, format=format),
@@ -50,6 +50,7 @@ class ApartmentList(APIView,MyPaginationMixin):
     # def get(self,request):
     #     print(self.queryset)
     #     page = self.paginate_queryset(self.queryset)
+    #     print(page)
     #     if page is not None:
     #         serializer = self.serializer_class(page, many=True)
     #         return self.get_paginated_response(serializer.data)
@@ -95,10 +96,10 @@ class UserList(APIView, MyPaginationMixin):
 
     '''
 
-    # def get(self,request):
-    #     users = User.objects.all()
-    #     serializer = UserSerializer(users,many=True)
-    #     return Response(serializer.data)
+    def get(self,request):
+        users = User.objects.all()
+        serializer = UserSerializer(users,many=True)
+        return Response(serializer.data)
 
     
 

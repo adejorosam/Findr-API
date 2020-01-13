@@ -7,6 +7,7 @@ from django.utils import timezone
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField('username',max_length=60, unique=True)
+    email = models.CharField('email', max_length=160, unique=True, null=True)
     phone_number = models.CharField('phone_number',max_length=11,unique=True)
     date_joined = models.DateTimeField(default=timezone.now)
     #last_login = LastSeen.objects.when(user=user)
@@ -15,7 +16,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                'site.')
     
     objects = UserManager()
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'phone_number'
+    REQUIRED_FIELDS = ['username']
    
 
     def __str__(self):
