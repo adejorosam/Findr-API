@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Apartment
+from .models import User,Apartment, Image
 from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
 
@@ -24,3 +24,7 @@ class ApartmentSerializer(serializers.ModelSerializer):
         model = Apartment
         fields = '__all__'
 
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = '__all__'

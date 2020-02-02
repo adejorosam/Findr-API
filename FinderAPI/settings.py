@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_framework.authtoken',
     'findr',
-    'rest_framework_swagger'
+    'rest_framework_swagger',
+    'drf_yasg'
     
 ]
 
@@ -69,9 +70,6 @@ REST_FRAMEWORK = {
         
     ],
     'DEFAULT_AUTHENTICATION_CLASS':[
-        #'rest_framework_simplejwt.authentication.JWTAuthentication',
-        #'rest_framework.authentication.BasicAuthentication',
-        #'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ],
     

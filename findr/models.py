@@ -23,12 +23,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
+
+class Image(models.Model):
+    house_pic = models.ImageField(upload_to='images/')
+    objects = models.Manager()
+
+
 class Apartment(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     description = models.TextField()
     house_address = models.CharField('house_address',max_length=10000)
     house_name = models.CharField('house_name',max_length=60)
-    house_pic = models.ImageField(upload_to='images/')
+    image = models.ForeignKey(Image,on_delete=models.CASCADE)
     title = models.CharField(max_length=300)
     price = models.CharField('price',max_length=60)
     total_rooms = models.CharField('total_rooms', max_length=100),

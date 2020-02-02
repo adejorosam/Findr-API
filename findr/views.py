@@ -1,5 +1,5 @@
-from .serializers import ApartmentSerializer, UserSerializer
-from .models import Apartment, User
+from .serializers import ApartmentSerializer, UserSerializer, ImageSerializer
+from .models import Apartment, User, Image
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -16,7 +16,9 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from .mixins import MyPaginationMixin
+from .helpers import *
 import json
+from rest_framework.parsers import FormParser,MultiPartParser
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
@@ -36,7 +38,8 @@ class API_Root(APIView):
         return Response({
             'users':reverse('UserList',request=request, format=format),
             'apartments':reverse('ApartmentList', request=request, format=format),
-            'login':reverse('Login', request=request, format=format)
+            'login':reverse('Login', request=request, format=format),
+            'image':reverse('Image', request=request, format=format)
         })
 
 class ApartmentList(APIView,MyPaginationMixin):
@@ -190,3 +193,32 @@ class ApartmentDetails(APIView):
         snippet = self.get_object(pk)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ImageList(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    def get(self,request):
+        images = Image.objects.all()
+        serializer = ImageSerializer(images,many=True)
+        return Response(serializer.data)
+
+    
+    def post(self, request, *args, **kwargs):
+        # property_id = request.data['property_id']
+
+        # converts querydict to original dict
+        images = dict((request.data).lists())['house_pic']
+        flag = 1
+        arr = []
+        for img_name in images:
+            modified_data = modify_input_for_multiple_files(img_name)
+            file_serializer = ImageSerializer(data=modified_data)
+            if file_serializer.is_valid():
+                file_serializer.save()
+                arr.append(file_serializer.data)
+            else:
+                flag = 0
+
+        if flag == 1:
+            return Response(arr, status=status.HTTP_201_CREATED)
+        else:
+            return Response(arr, status=status.HTTP_400_BAD_REQUEST)
