@@ -11,6 +11,8 @@ Modern Python web technologies were adopted for this project
 Django: Django is a Python-based free and open-source web framework, which follows the model-template-view architectural pattern. It is maintained by the Django Software Foundation, an independent organization established as a 501 non-profit.
 Visit [here](https://djangoproject.com/) for more information.
 
+Django-Rest-Framework: Django REST framework is a powerful and flexible toolkit for building Web APIs. Visit [here](https://www.django-rest-framework.org/#) for more information.
+
 
 
 ## Installation
