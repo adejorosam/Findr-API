@@ -4,22 +4,12 @@
 ## Application Description
 This is a simple API built for the sole purpose of finding a lasting solution to the myriads of a accomodation issues in O.O.U Ago-iwoye environs. Students don't find it easy in their search for apartment. It was for that purpose, that was why this API was built.
 
-## Features
-Below are the features of my WEconnect app
-
-Organizers(user) can create event<br/>
-Organizers(user) can delete event<br/>
-Users can register to attend an event<br/>
-Users can unregister from attedning an event<br/>
-
-
-
 ## Technologies used
 
 Modern Python web technologies were adopted for this project
 
-Django: Laravel is a web application framework with expressive, elegant syntax. We’ve already laid the foundation — freeing you to create without sweating the small things.
-Visit [here](https://laravel.com/) for more information.
+Django: Django is a Python-based free and open-source web framework, which follows the model-template-view architectural pattern. It is maintained by the Django Software Foundation, an independent organization established as a 501 non-profit.
+Visit [here](https://djangoproject.com/) for more information.
 
 
 
@@ -28,7 +18,7 @@ Visit [here](https://laravel.com/) for more information.
 ```
 git clone https://github.com/samson1998/Findr-API.git
 
-cd file
+cd Findr-API
 
 pip install -r requirements.txt
 
@@ -49,15 +39,15 @@ python mange.py createsuperuser
 <tr><td>POST</td> <td>/api/v1/users</td>  <td>Creates a user</td></tr>
 <tr><td>PATCH</td> <td>/api/v1/users</td>  <td>Update a user</td></tr>
     
-<tr><td>POST</td> <td>/api/v1/meeting</td>  <td>Creates a meeting</td></tr>
-<tr><td>POST</td> <td>/api/v1/registration</td>  <td>Register for a meeting</td></tr>
+<tr><td>POST</td> <td>/api/v1/apartments</td>  <td>Creates a apartment</td></tr>
+<tr><td>POST</td> <td>/api/v1/apartments</td>  <td>Get list of all apartments</td></tr>
 
 <tr><td>GET</td> <td>/api/v1/users</td>  <td>View all users</td></tr>
 <tr><td>GET</td> <td>/api/v1/users/{id}</td>  <td>View a particular user</td></tr>
-<tr><td>GET</td> <td>/api/v1/meeting/{id}</td>  <td>View a particular meeting</td></tr>
+<tr><td>GET</td> <td>/api/v1/apartments/{id}</td>  <td>View a particular apartment</td></tr>
 <tr><td>PATCH</td> <td>/api/v1/users</td>  <td>Update a user</td></tr>
-<tr><td>DELETE</td> <td>/api/v1/meeting/{id}</td>  <td>Delete a particular meeting</td></tr>
-<tr><td>DELETE</td> <td>/api/v1/registration/{id}</td>  <td>Unregister from a particular meeting</td></tr>
+<tr><td>DELETE</td> <td>/api/v1/apartments/{id}</td>  <td>Delete a particular apartment</td></tr>
+
 
 
 
