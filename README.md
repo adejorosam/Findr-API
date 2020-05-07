@@ -41,7 +41,7 @@ python mange.py createsuperuser
 <tr><td>POST</td> <td>/api/v1/users</td>  <td>Creates a user</td></tr>
 <tr><td>PATCH</td> <td>/api/v1/users</td>  <td>Update a user</td></tr>
     
-<tr><td>POST</td> <td>/api/v1/apartments</td>  <td>Creates a apartment</td></tr>
+<tr><td>POST</td> <td>/api/v1/apartments</td>  <td>Create an apartment</td></tr>
 <tr><td>POST</td> <td>/api/v1/apartments</td>  <td>Get list of all apartments</td></tr>
 
 <tr><td>GET</td> <td>/api/v1/users</td>  <td>View all users</td></tr>
